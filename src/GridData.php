@@ -16,6 +16,6 @@ class GridData
     }
 
     public function __construct() {
-        echo 987654321;
+        echo 987654321 . 'q';
     }
 }
