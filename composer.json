@@ -8,7 +8,7 @@
   },
   "autoload": {
     "psr-4": {
-      "vetal2409\\grid-data\\": "src/"
+      "vetal2409\\grid\\": "src/"
     }
   }
 }
