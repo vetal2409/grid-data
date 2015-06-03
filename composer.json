@@ -4,7 +4,8 @@
   "description": "Beautiful table manage",
   "license": "MIT",
   "require": {
-    "php": ">=5.3.0"
+    "php": ">=5.3.0",
+    "bower-asset/bootstrap": "dev-master"
   },
   "autoload": {
     "psr-4": {
