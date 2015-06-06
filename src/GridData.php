@@ -10,13 +10,17 @@ namespace vetal2409\grid;
 
 class GridData
 {
-    public $extUrl = '';
-    public $extPath = '';
+    private $extUrl = '';
+    private $extPath = '';
+    private $get = array();
 
     public function __construct($vendorUrl, $vendorPath)
     {
         $this->extUrl = $vendorUrl . '/vetal2409/grid-data';
         $this->extPath = $vendorPath . '/vetal2409/grid-data';
+        if (isset($_GET)) {
+            $this->get = $_GET;
+        }
     }
 
     /**
@@ -39,7 +43,7 @@ class GridData
         $result = '';
         //$result .= $this->assets();
         $result .= '<div class="table-responsive">';
-        $result .= '<table class="table table-bordered" data-toggle="table" data-height="440">';
+        $result .= '<table class="grid-data-table table table-bordered" data-toggle="table" data-height="700">';
         $result .= '<thead>';
         $result .= '<tr>';
         foreach ($info['labels'] as $keyL => $label) {
@@ -100,19 +104,21 @@ class GridData
                     }
                 } else {
                     $attribute = array_key_exists('attribute', $col_val) ? $col_val['attribute'] : $col_key;
-                    $label = array_key_exists('label', $col_val) ? $col_val['label'] : end($result['attributes']);
+                    $label = array_key_exists('label', $col_val) ? $col_val['label'] : $attribute;
                 }
             } else {
                 $attribute = $col_val;
                 $label = $col_val;
             }
             $result['attributes'][] = $attribute;
-            //$sort = isset()
-//            if (isset($_GET['sort']) && ($sort = $_GET['sort']{0} === '-' ? substr($_GET['sort'], 1) : $_GET['sort'])) {
-//
-//            }
-            //http_build_query($get)
-            $result['labels'][] = $attribute ? '<a href="?sort=' . $attribute . '">' . $label . '</a>' : $label;
+            $sortInfo = $this->getSortInfo($attribute);
+            $directionSymbol = '';
+            if ($sortInfo['direction'] === 'asc') {
+                $directionSymbol = ' <i class="fa fa-chevron-down"></a></th>';
+            } elseif ($sortInfo['direction'] === 'desc') {
+                $directionSymbol = ' </i><i class="fa fa-chevron-up"></i>';
+            }
+            $result['labels'][] = $attribute ? '<a href="' . $sortInfo['http_query'] . '">' . $label . $directionSymbol . '</a>' : $label;
         }
         foreach ($dataProvider as $key => $data) {
             foreach ($columns as $k => $v) {
@@ -158,5 +164,40 @@ class GridData
     public static function array_keys_exists(array $keys, $search)
     {
         return count(array_intersect_key(array_flip($keys), $search)) === count($keys);
+    }
+
+    /**
+     * @param $attribute
+     * @return string
+     */
+    public function getSortInfo($attribute)
+    {
+        $get = $this->get;
+        $sortPrefix = '';
+        $resultInfo['direction'] = '';
+        if (array_key_exists('sort', $get)) {
+            preg_match('/([-]?)(.*)/', (string)$get['sort'], $sortInfo);
+            if ($attribute === $sortInfo[2]) {
+                if ($sortInfo[1]) {
+                    $resultInfo['direction'] = 'desc';
+                } else {
+                    $sortPrefix = '-';
+                    $resultInfo['direction'] = 'asc';
+                }
+            }
+        }
+        $get['sort'] = $sortPrefix . $attribute;
+        $resultInfo['http_query'] = $this->getHttpQuery($get);
+        return $resultInfo;
+    }
+
+    /**
+     * @param $params
+     * @param bool $new
+     * @return string
+     */
+    private function getHttpQuery($params, $new = true)
+    {
+        return ($new ? '?' : '') . http_build_query($params);
     }
 }
