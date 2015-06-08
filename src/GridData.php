@@ -41,19 +41,19 @@ class GridData
     {
         $info = $this->generateData($config['columns'], $config['dataProvider']);
         $result = '';
-        //$result .= $this->assets();
+        $result .= $this->assets();
         $result .= '<div class="table-responsive">';
         $result .= '<table class="grid-data-table table table-bordered" data-toggle="table" data-height="700">';
         $result .= '<thead>';
         $result .= '<tr>';
         foreach ($info['labels'] as $keyL => $label) {
-            $result .= '<th title="' . $info['attributes'][$keyL] . '">';
+            $result .= '<th>';
             $result .= $label;
             $result .= '</th>';
         }
         $result .= '</tr>';
         $result .= '</thead>';
-        //$result .= '<tbody>';
+        $result .= '<tbody>';
         foreach ($info['rows'] as $row) {
             $result .= '<tr>';
             foreach ($row as $v) {
@@ -63,7 +63,7 @@ class GridData
             }
             $result .= '</tr>';
         }
-        //$result .= '</tbody>';
+        $result .= '</tbody>';
         $result .= '</table>';
         $result .= '</div>';
         return $result;
@@ -71,9 +71,9 @@ class GridData
 
     private function assets()
     {
-        $result = '<link rel="stylesheet" href="' . $this->extUrl . '/../../bower-asset/bootstrap/dist/css/bootstrap.min.css"/>';
-        $result .= '<link rel="stylesheet" href="' . $this->extUrl . '/assets/css/style.css"/>';
-        $result .= '<script src="' . $this->extUrl . '/../../bower-asset/jquery/dist/jquery.min.js"></script>';
+        //$result = '<link rel="stylesheet" href="' . $this->extUrl . '/../../bower-asset/bootstrap/dist/css/bootstrap.min.css"/>';
+        $result = '<link rel="stylesheet" href="' . $this->extUrl . '/assets/css/style.css"/>';
+        //$result .= '<script src="' . $this->extUrl . '/../../bower-asset/jquery/dist/jquery.min.js"></script>';
         $result .= '<script src="' . $this->extUrl . '/assets/js/main.js"></script>';
         return $result;
     }
@@ -118,7 +118,10 @@ class GridData
             } elseif ($sortInfo['direction'] === 'desc') {
                 $directionSymbol = ' </i><i class="fa fa-chevron-up"></i>';
             }
-            $result['labels'][] = $attribute ? '<a href="' . $sortInfo['http_query'] . '">' . $label . $directionSymbol . '</a>' : $label;
+
+            $result['labels'][] = $attribute
+                ? '<a href="' . $sortInfo['http_query'] . '"  title="' . $attribute . '">' . $label . $directionSymbol . '</a>'
+                : $label;
         }
         foreach ($dataProvider as $key => $data) {
             foreach ($columns as $k => $v) {

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('.grid-table .checkbox-column-label').change(function () {
+    $(document).on('change', '.grid-data-table .checkbox-column-label', function () {
         var $allCheckboxes = $('.checkbox-column');
         if ($(this).prop('checked')) {
             $allCheckboxes.prop('checked', true);
