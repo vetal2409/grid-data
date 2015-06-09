@@ -83,7 +83,7 @@ class GridData
      * @param array $dataProvider
      * @return array
      */
-    private function generateData(array $columns, array $dataProvider)
+    public function generateData(array $columns, array $dataProvider)
     {
         $result['attributes'] = $result['labels'] = $result['rows'] = array();
         foreach ($columns as $col_key => $col_val) {
